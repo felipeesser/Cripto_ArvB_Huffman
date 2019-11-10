@@ -14,6 +14,43 @@ typedef struct ArvB{
   float *freq;
   struct Arvhuff **filho;
 }TAhuff;*/
+typedef struct lista{
+    char letra;
+    struct lista* p;
+    }TF;
+void push(TF**filaini,char letra){
+    TF *novo;
+    novo=(TF*)malloc(sizeof(TF));
+    novo->letra=letra;
+    novo->p=NULL;
+    if((*filaini)==NULL){
+        (*filaini)=novo;
+        }
+    else{
+        TF *aux=(*filaini);
+        while(aux->p){
+            aux=aux->p;}
+        aux->p=novo;
+}
+}
+char pop(TF**filaini){
+    char retorno;
+    TF *aux;
+    aux=(*filaini);
+    TF **pop=filaini;
+    if ((*filaini)==NULL)return 'ç';
+    if((*filaini)->p!=NULL){
+    retorno=(*filaini)->letra;
+    (*filaini)=aux->p;
+    free(pop);
+    return retorno;}
+    else{
+        retorno=(*filaini)->letra;
+        (*filaini)=NULL;
+        free(pop);
+        return retorno;
+    }
+}
 
 TAB *Cria(int t){
   TAB* novo = (TAB*)malloc(sizeof(TAB));
@@ -139,7 +176,7 @@ TAB *Insere(TAB *T, char k, int t){
 TAB* remover(TAB* arv, char ch, int t){
   if(!arv) return arv;
   int i;
-  printf("Removendo %d...\n", ch);
+  printf("Removendo %c...\n", ch);
   for(i = 0; i<arv->nchaves && arv->chave[i] < ch; i++);
   if(i < arv->nchaves && ch == arv->chave[i]){ //CASOS 1, 2A, 2B e 2C
     if(arv->folha){ //CASO 1
@@ -283,12 +320,33 @@ TAB* retira(TAB* arv, char k, int t){
   if(!arv || !Busca(arv, k)) return arv;
   return remover(arv, k, t);
 }
-
+void criaarvore(TAB **arv,int t){
+char alfabeto[52]={'a','b','c','d','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+for (int i=0;i<51;i++){
+    (*arv)=Insere((*arv),alfabeto[i],t);
+}
+}
 
 int main(int argc, char *argv[]){
   TAB * arvore = Inicializa();
  // int to;
   char num,from;
+  int cont=0;
+  TF *Ti=NULL;
+  char letra;
+  criaarvore(&arvore,t);
+  Imprime(arvore,0);
+  printf("Digite um texto\n");
+  scanf("%c",&letra);
+  cont++;
+  while (letra!='\n'){
+        if (letra>64&&letra<123){
+                push(&Ti,letra);
+                cont++;
+}
+    scanf("%c",&letra);
+}
+    for(int i=0;i<cont-1;i++)printf("%c",pop(&Ti));
   while(num != '.'){
     printf("Digite uma letra para adicionar. ';' para imprimir. ',' para remover e '.' para sair\n");
     scanf("\n%c", &num);
