@@ -16,8 +16,42 @@ typedef struct ArvB{
 }TAhuff;*/
 typedef struct lista{
     char letra;
+    int cod;
     struct lista* p;
     }TF;
+void pushi(TF**filaini,int letra){
+    TF *novo;
+    novo=(TF*)malloc(sizeof(TF));
+    novo->cod=letra;
+    novo->p=NULL;
+    if((*filaini)==NULL){
+        (*filaini)=novo;
+        }
+    else{
+        TF *aux=(*filaini);
+        while(aux->p){
+            aux=aux->p;}
+        aux->p=novo;
+}
+}
+int popi(TF**filaini){
+    if ((*filaini)==NULL)return -7;
+    int retorno;
+    TF *aux;
+    aux=(*filaini);
+    TF **pop=filaini;
+    if((*filaini)->p!=NULL){
+    retorno=(*filaini)->cod;
+    (*filaini)=aux->p;
+    free(pop);
+    return retorno;}
+    else{
+        retorno=(*filaini)->cod;
+        (*filaini)=NULL;
+        free(pop);
+        return retorno;
+    }
+}
 void push(TF**filaini,char letra){
     TF *novo;
     novo=(TF*)malloc(sizeof(TF));
@@ -34,11 +68,11 @@ void push(TF**filaini,char letra){
 }
 }
 char pop(TF**filaini){
+    if ((*filaini)==NULL)return 'ç';
     char retorno;
     TF *aux;
     aux=(*filaini);
     TF **pop=filaini;
-    if ((*filaini)==NULL)return 'ç';
     if((*filaini)->p!=NULL){
     retorno=(*filaini)->letra;
     (*filaini)=aux->p;
@@ -51,7 +85,6 @@ char pop(TF**filaini){
         return retorno;
     }
 }
-
 TAB *Cria(int t){
   TAB* novo = (TAB*)malloc(sizeof(TAB));
   novo->nchaves = 0;
@@ -321,51 +354,96 @@ TAB* retira(TAB* arv, char k, int t){
   return remover(arv, k, t);
 }
 void criaarvore(TAB **arv,int t){
-char alfabeto[52]={'a','b','c','d','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
-for (int i=0;i<51;i++){
+char alfabeto[52]={'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+for (int i=0;i<52;i++){
     (*arv)=Insere((*arv),alfabeto[i],t);
 }
 }
+int codificaaux(char letra,TAB* arv,int andar){
+  int i = 0;
+  int j=0;
+  while(i < arv->nchaves && letra > arv->chave[i]) i++;
+  if(i < arv->nchaves && letra == arv->chave[i]){printf("%d",andar);
+  return i;}
+  if(arv->folha){
+    printf("?");
+    return -1;
+}
+    j=codificaaux(letra,arv->filho[i],andar+1);
+    if(j>=0)printf("%d",i);
+    return j;
+}
+void codifica(TAB* arv,TF **Ti,int cont){
+int j;
+if(!arv||!(*Ti))return;
+for(int i=0;i<cont-1;i++){j=codificaaux(pop(Ti),arv,0);
+if (j>=0)printf("%d",j);
+}}
+void deco(TF **Ti,TAB* arv){
+if ((*Ti)==NULL)return;
+TAB *aux=arv;
+int j=popi(Ti);
+for(int i=0;i<j;i++){
+    aux=aux->filho[popi(Ti)];
+}printf("%c",aux->chave[popi(Ti)]);
+deco(Ti,arv);}
+void retiramin(TAB* arv){
+    char min[52]={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+    for(int i=0;i<52;i++){
+      arv=retira(arv,min[i],t);
+    }
 
+}
+void retiramai(TAB* arv){
+    char mai[52]={'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+    for(int i=0;i<52;i++){
+      arv=retira(arv,mai[i],t);
+    }
+
+}
+void retiravog(TAB* arv){
+    char mai[52]={'A','E','I','O','U'};
+    for(int i=0;i<52;i++){
+      arv=retira(arv,mai[i],t);
+    }
+
+}
+void retiracon(TAB* arv){
+    char mai[52]={'B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z','b','c','d','f','g','h','j','k','l','m','n','p','q','r','s','t','v','w','x','y','z',};
+    for(int i=0;i<52;i++){
+      arv=retira(arv,mai[i],t);
+    }
+
+//
 int main(int argc, char *argv[]){
   TAB * arvore = Inicializa();
- // int to;
-  char num,from;
-  int cont=0;
+  int cont=0,chave=0;
   TF *Ti=NULL;
-  char letra;
+  TF *Td=NULL;
+  char letra,cod;
   criaarvore(&arvore,t);
   Imprime(arvore,0);
-  printf("Digite um texto\n");
+  while(chave !=-1){
+    printf("Digite -1 para sair 0 para encriptar e 1 para desencriptar\n");
+    scanf("%d",&chave);
+    while ((getchar()) != '\n');//aparentemente limpa o buffer
+  if (chave==0){
+printf("Digite um texto\n");
   scanf("%c",&letra);
   cont++;
   while (letra!='\n'){
-        if (letra>64&&letra<123){
-                push(&Ti,letra);
-                cont++;
-}
+    push(&Ti,letra);
+    cont++;
     scanf("%c",&letra);
+}codifica(arvore,&Ti,cont);
 }
-    for(int i=0;i<cont-1;i++)printf("%c",pop(&Ti));
-  while(num != '.'){
-    printf("Digite uma letra para adicionar. ';' para imprimir. ',' para remover e '.' para sair\n");
-    scanf("\n%c", &num);
-    if(num == ','){
-      scanf("\n%c", &from);
-      arvore = retira(arvore, from, t);
-      Imprime(arvore,0);
-    }
-    else if(num == '.'){
-      printf("\n");
-      Imprime(arvore,0);
-      Libera(arvore);
-      return 0;
-    }
-    else if(num==';'){
-      printf("\n");
-      Imprime(arvore,0);
-    }
-    else arvore = Insere(arvore, num, t);
-    printf("\n\n");
-  }
+if (chave==1){
+printf("Digite o codigo\n");
+scanf("%c",&cod);
+  while (cod!='\n'){
+    if(cod>47&&cod<58)pushi(&Td,cod-48);
+    scanf("%c",&cod);
 }
+deco(&Td,arvore);
+}}
+return 0;}
